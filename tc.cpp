@@ -21,9 +21,6 @@ atlagos_szohossz (const char *titkos, int titkos_meret)
 int
 tiszta_lehet (const char *titkos, int titkos_meret)
 {
-  // a tiszta szoveg valszeg tartalmazza a gyakori magyar szavakat
-  // illetve az átlagos szóhossz vizsgálatával csökkentjük a
-  // potenciális töréseket
 
   double szohossz = atlagos_szohossz (titkos, titkos_meret);
 
@@ -69,18 +66,15 @@ main (void)
   char *p = titkos;
   int olvasott_bajtok;
 
-  // titkos fajt berantasa
   while ((olvasott_bajtok =
 	  read (0, (void *) p,
 		(p - titkos + OLVASAS_BUFFER <
 		 MAX_TITKOS) ? OLVASAS_BUFFER : titkos + MAX_TITKOS - p)))
     p += olvasott_bajtok;
-
-  // maradek hely nullazasa a titkos bufferben  
+ 
   for (char i = 0; i < MAX_TITKOS - (p - titkos); ++i)
     titkos[p - titkos + i] = '\0';
 
-  // osszes kulcs eloallitasa
   for (char ii = 'A'; ii <= 'Z'; ++ii)
     for (char ji = 'A'; ji <= 'Z'; ++ji)
       for (char ki = 'A'; ki <= 'Z'; ++ki)
@@ -97,8 +91,7 @@ main (void)
 		      printf
 			("Kulcs: [%c%c%c%c%c]\nTiszta szoveg: [%s]\n",
 			 ii, ji, ki, li, mi, titkos);
-
-		    // ujra EXOR-ozunk, igy nem kell egy masodik buffer  
+ 
 		    exor (kulcs, KULCS_MERET, titkos, p - titkos);
 		  }
 
